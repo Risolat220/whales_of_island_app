@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../core/theme/colors.dart';
 import '../core/theme/dimens.dart';
 
@@ -30,12 +29,12 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image Section
             Container(
               height: AppDimens.d300,
+              width: double.infinity,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('https://via.placeholder.com/400x300'), // Rasm URL manzili
+                  image: AssetImage("assets/images/fin-whale-balaenoptera-physalus.jpg"),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -86,7 +85,6 @@ class _GuideDetailScreenState extends State<GuideDetailScreen> {
                 ],
               ),
             ),
-            // Description Section
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
