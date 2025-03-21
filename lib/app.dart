@@ -10,6 +10,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: AppRoutes.home,
       routes: AppRoutes.routes,
+      onUnknownRoute: AppRoutes.onUnknownRoute,
     );
   }
 }

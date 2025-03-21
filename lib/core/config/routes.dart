@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:whales_of_island_app/screen/error.dart';
 import '../../screen/home.dart';
 import '../../screen/instructions.dart';
-import '../../screen/detail.dart';
 
-sealed class AppRoutes{
-  static final home = "/";
-  static final instructions = "instructions";
-  static final  detail = "detail";
 
-  static Map<String, Widget Function(BuildContext)> routes = <String, WidgetBuilder>{
-    AppRoutes.home: (context) => HomeScreen(),
-    AppRoutes.instructions: (context) => SafetyInstructionsScreen(),
-    AppRoutes.detail: (context) => GuideDetailScreen(),
-};
+sealed class AppRoutes {
+  static const home = "/";
+  static const safety = "";
 
+  static Map<String, Widget Function(BuildContext)> routes =
+  <String, WidgetBuilder>{
+    AppRoutes.home: (context) => const HomeScreen(),
+    AppRoutes.safety: (context)=> const SafetyInstructionsScreen()
+  };
+
+  static Route<dynamic>? onUnknownRoute(RouteSettings settings) {
+    return MaterialPageRoute(
+      builder: (context) => ErrorScreen(),
+    );
+  }
 }

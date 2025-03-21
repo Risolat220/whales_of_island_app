@@ -1,111 +1,95 @@
 import 'package:flutter/material.dart';
 import '../core/theme/colors.dart';
-import '../core/theme/dimens.dart';
-import '../services/guide_service.dart';
+import '../core/theme/icons.dart';
+import '../core/theme/strings.dart';
+import '../core/theme/text_styles.dart';
+import '../core/widgets/detail_widgets.dart';
+import '../services/app_service.dart';
 import '../core/config/routes.dart';
+import 'detail.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  AppService appService = AppService();
+  int requiredIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Guides'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.upload),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      body: ListView.builder(
-        padding: AppDimens.edgeAll8,
-        itemCount: GuideService().guides.length,
-        itemBuilder: (context, index) {
-          final guide = GuideService().guides[index];
-          return GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context, AppRoutes.detail);
-            },
-            child: Card(
-              elevation: 4,
-              margin: AppDimens.edgeSym8,
-              shape: RoundedRectangleBorder(
-                borderRadius: AppDimens.borderRadius12,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipRRect(
-                    borderRadius: AppDimens.borderRadius12V,
-                    child: Image.asset(
-                      guide['imageUrl']!,
-                      height: AppDimens.d200,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Padding(
-                    padding: AppDimens.edgeAll16,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          guide['title']!,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+      appBar: _appBar(),
+      body: Center(
+        child: FutureBuilder<void>(
+            future: appService.initialize(),
+            builder: (context, _){
+              return Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: ListView.builder(
+                    itemCount: appService.items.length,
+                    itemBuilder: (context, index) {
+                      final item = appService.items[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: MyContainer(
+                          item: item,
+                          name: item.name,
+                          subName: item.subName,
+                          hours: item.hours,
+                          onTap: (){
+                            requiredIndex = index;
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => Detail(whale: appService.items[index])));
+                          },
                         ),
-                        AppDimens.sized4,
-                        Text(
-                          guide['subtitle']!,
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: AppColors.grey,
-                          ),
-                        ),
-                        AppDimens.sized8,
-                        Text(
-                          guide['duration']!,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: AppColors.mainColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
+                      );
+                    },
+                  )
+              );
+            }
+        ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.grid_view),
-            label: '',
+      bottomNavigationBar: _bottomNavigationBar(context),
+    );
+  }
+
+
+  BottomNavigationBar _bottomNavigationBar(BuildContext context) {
+    return BottomNavigationBar(
+      selectedItemColor: AppColors.mainColor,
+      type: BottomNavigationBarType.fixed,
+      backgroundColor: AppColors.white,
+      onTap: (page){
+        if(page==1){
+          Navigator.pushNamed(context, AppRoutes.safety);
+        }
+      },
+      items: [
+        BottomNavigationBarItem(icon: AppIcons.dashboard, label: ""),
+        BottomNavigationBarItem(icon: AppIcons.help, label: ""),
+        BottomNavigationBarItem(icon: AppIcons.person, label: "")
+      ],
+    );
+  }
+
+
+  AppBar _appBar() {
+    return AppBar(
+      backgroundColor: AppColors.white,
+      title: Text(AppStrings.guides, style: AppTextStyles.guides),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 10),
+          child: IconButton(
+              onPressed: () {},
+              icon: AppIcons.share
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.help),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: '',
-          ),
-        ],
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        onTap: (index) {
-          if (index == 1) {
-            Navigator.pushNamed(context, AppRoutes.instructions);
-          }
-        },
-      ),
+        )
+      ],
     );
   }
 }
+
